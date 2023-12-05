@@ -1,0 +1,17 @@
+{
+    "scrapeConfiguration":{
+        "configurationBlob":"${SCRAPE_CONFIGURATION}"
+    },
+    "source":{
+        "eksConfiguration":{
+            "clusterArn":"arn:aws:eks:$REGION:234401896482:cluster/$CLUSTER_NAME",
+            "securityGroupIds":${CLUSTER_SECURITY_GROUP_IDS},
+            "subnetIds":${CLUSTER_SUBNET_IDS}
+        }
+    },
+    "destination":{
+        "ampConfiguration":{
+            "workspaceArn":"arn:aws:aps:${REGION}:234401896482:workspace/${WORKSPACE_ID}"
+        }
+    }
+}

@@ -1,13 +1,27 @@
 set -e
 
-kubectl -n prometheus-test delete svc prometheus-test-service
-# Output:
-#
-# service "prometheus-test-service" deleted
+source cluster_params.sh
 
-kubectl delete namespace prometheus-test
+# # SCRAPER_ID=s-a621d9d7-e24e-45a6-9d5e-6a7c2be7b7cc
 
-eksctl delete cluster --name prometheus-test
+# # aws amp delete-scraper --scraper-id $SCRAPER_ID
+
+# # MAKE UNTIL DELETED LOOP
+# # aws amp describe-scraper --scraper-id $SCRAPER_ID
+
+# kubectl -n $CLUSTER_NAME delete svc prometheus-test-service
+# # Output:
+# #
+# # service "prometheus-test-service" deleted
+
+kubectl delete namespace $CLUSTER_NAME
+
+kubectl delete namespace prometheus-agent-namespace
+
+WORKSPACE_ID=$(cat /tmp/create-workspace-out.json | jq -r '.workspaceId')
+aws amp delete-workspace --workspace-id $WORKSPACE_ID
+
+eksctl delete cluster --name $CLUSTER_NAME
 # Output:
 #
 # 2023-11-27 09:36:19 [ℹ]  deleting EKS cluster "prometheus-test"
@@ -46,3 +60,9 @@ aws ecr delete-repository --repository-name prometheus_test_pod --force
 #         "imageTagMutability": "MUTABLE"
 #     }
 # }
+
+# aws iam detach-role-policy \
+#     --policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
+#     --role-name $EBS_CSI_DRIVER_ROLE_NAME
+
+# aws iam delete-role --role-name $EBS_CSI_DRIVER_ROLE_NAME
