@@ -2,17 +2,16 @@ set -e
 
 source cluster_params.sh
 
-# # SCRAPER_ID=s-a621d9d7-e24e-45a6-9d5e-6a7c2be7b7cc
+# SCRAPER_ID=s-45062a51-dd75-4b9b-9621-b8a891045f0f
+# aws amp delete-scraper --scraper-id $SCRAPER_ID
 
-# # aws amp delete-scraper --scraper-id $SCRAPER_ID
+# MAKE UNTIL DELETED LOOP
+# aws amp describe-scraper --scraper-id $SCRAPER_ID
 
-# # MAKE UNTIL DELETED LOOP
-# # aws amp describe-scraper --scraper-id $SCRAPER_ID
-
-# kubectl -n $CLUSTER_NAME delete svc prometheus-test-service
-# # Output:
-# #
-# # service "prometheus-test-service" deleted
+kubectl -n $CLUSTER_NAME delete svc prometheus-test-service
+# Output:
+#
+# service "prometheus-test-service" deleted
 
 kubectl delete namespace $CLUSTER_NAME
 
@@ -61,8 +60,8 @@ aws ecr delete-repository --repository-name prometheus_test_pod --force
 #     }
 # }
 
-# aws iam detach-role-policy \
-#     --policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
-#     --role-name $EBS_CSI_DRIVER_ROLE_NAME
+aws iam detach-role-policy \
+    --policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
+    --role-name $EBS_CSI_DRIVER_ROLE_NAME
 
-# aws iam delete-role --role-name $EBS_CSI_DRIVER_ROLE_NAME
+aws iam delete-role --role-name $EBS_CSI_DRIVER_ROLE_NAME
