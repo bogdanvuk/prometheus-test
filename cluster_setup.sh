@@ -181,24 +181,24 @@ until [[ $(aws amp describe-workspace --workspace-id $WORKSPACE_ID | jq -r ".wor
 
 kubectl create namespace $SERVICE_ACCOUNT_NAMESPACE
 
-IAM_PROXY_PROMETHEUS_INGEST_ROLE_ARN=arn:aws:iam::$WORKSPACE_ID:role/amp-iamproxy-ingest-role
-IAM_PROXY_PROMETHEUS_QUERY_ROLE_ARN=arn:aws:iam::$WORKSPACE_ID:role/amp-iamproxy-query-role
-SERVICE_ACCOUNT_IAM_AMP_INGEST_ARN=arn:aws:iam::$WORKSPACE_ID:policy/AMPIngestPolicy
-SERVICE_ACCOUNT_IAM_AMP_QUERY_ARN=arn:aws:iam::$WORKSPACE_ID:policy/AMPQueryPolicy
+SERVICE_ACCOUNT_IAM_AMP_INGEST_ARN=arn:aws:iam::$AWS_ACCOUNT_ID:policy/AMPIngestPolicy
+SERVICE_ACCOUNT_IAM_AMP_QUERY_ARN=arn:aws:iam::$AWS_ACCOUNT_ID:policy/AMPQueryPolicy
 
+set +e
 aws iam detach-role-policy \
     --policy-arn $SERVICE_ACCOUNT_IAM_AMP_INGEST_ARN \
-    --role-name $IAM_PROXY_PROMETHEUS_INGEST_ROLE_ARN
+    --role-name amp-iamproxy-ingest-role
 
 aws iam detach-role-policy \
     --policy-arn $SERVICE_ACCOUNT_IAM_AMP_QUERY_ARN \
-    --role-name $IAM_PROXY_PROMETHEUS_QUERY_ROLE_ARN
+    --role-name amp-iamproxy-query-role
 
-aws iam delete-role --role-name $IAM_PROXY_PROMETHEUS_INGEST_ROLE_ARN
-aws iam delete-role --role-name $IAM_PROXY_PROMETHEUS_QUERY_ROLE_ARN
+aws iam delete-role --role-name amp-iamproxy-ingest-role
+aws iam delete-role --role-name amp-iamproxy-query-role
 
-aws iam delete-policy --role-name $SERVICE_ACCOUNT_IAM_AMP_INGEST_ARN
-aws iam delete-policy --role-name $SERVICE_ACCOUNT_IAM_AMP_QUERY_ARN
+aws iam delete-policy --policy-arn $SERVICE_ACCOUNT_IAM_AMP_INGEST_ARN
+aws iam delete-policy --policy-arn $SERVICE_ACCOUNT_IAM_AMP_QUERY_ARN
+set -e
 
 output=$(./kubernetes/createIRSA-AMPIngest.sh | head -n 1)
 # If Prometheus role already exists, additional words will be attached to output

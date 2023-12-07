@@ -1,6 +1,5 @@
 export REGION=us-west-2
 export AWS_ACCOUNT_ID=234401896482
-export CLUSTER_NAME=prometheus-test1
+export CLUSTER_NAME=promtest1
 export SERVICE_ACCOUNT_NAMESPACE=prometheus-agent-namespace
-# export EBS_CSI_DRIVER_ROLE_NAME=AmazonEKS_EBS_CSI_DriverRole
 export EBS_CSI_DRIVER_ROLE_NAME=AmazonEKS_EBS_CSI_Driver_$CLUSTER_NAME
